@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { PiGenderMaleBold, PiGenderFemaleBold } from "react-icons/pi";
 
 function App() {
   const url = "https://api.randomuser.me/?results=3";
@@ -50,16 +51,24 @@ function App() {
                 {user.name.first} {user.name.last}
               </h2>
               <p className="card-text">Idade: {user.dob.age}</p>
-              <p className="card-text">Sexo: {user.gender}</p>
               <p className="card-text">Cidade: {user.location.city}</p>
             </div>
           </div>
         ))}
       </div>
-      
+
       {isModalOpen && selectedUser && (
         <div className="modal-overlay">
           <div className="modal">
+            <button onClick={closeModal}>X</button>
+            <i className="icon">
+              {" "}
+              {selectedUser.gender === "male" ? (
+                <PiGenderMaleBold className="gender-icon" />
+              ) : (
+                <PiGenderFemaleBold className="gender-icon" />
+              )}
+            </i>
             <img
               src={selectedUser.picture.large}
               alt={selectedUser.name.first}
@@ -70,9 +79,7 @@ function App() {
                 {selectedUser.name.first} {selectedUser.name.last}
               </h2>
               <p>Idade: {selectedUser.dob.age}</p>
-              <p>Sexo: {selectedUser.gender}</p>
               <p>Cidade: {selectedUser.location.city}</p>
-              <button onClick={closeModal}>Fechar</button>
             </div>
           </div>
         </div>

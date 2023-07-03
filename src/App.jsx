@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function App() {
-  const url = "https://api.randomuser.me/?results=2";
+  const url = "https://api.randomuser.me/?results=3";
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -20,19 +22,61 @@ function App() {
     fetchData();
   }, []);
 
+  const openModal = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="App">
-      <div>
+      <div className="card-container">
         {users.map((user) => (
-          <div key={user.login.username} >
-            <img src={user.picture.large} alt={user.name.first} />
-            <h2>{user.name.first}</h2>
-            <p>Idade: {user.dob.age}</p>
-            <p>Sexo: {user.gender}</p>
-            <p>Cidade: {user.location.city}</p>
+          <div
+            className="card"
+            key={user.login.username}
+            onClick={() => openModal(user)}
+          >
+            <img
+              src={user.picture.large}
+              alt="imagens"
+              className="card-image"
+            />
+            <div className="card-content">
+              <h2 className="card-title">
+                {user.name.first} {user.name.last}
+              </h2>
+              <p className="card-text">Idade: {user.dob.age}</p>
+              <p className="card-text">Sexo: {user.gender}</p>
+              <p className="card-text">Cidade: {user.location.city}</p>
+            </div>
           </div>
         ))}
       </div>
+      
+      {isModalOpen && selectedUser && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <img
+              src={selectedUser.picture.large}
+              alt={selectedUser.name.first}
+              className="modal-image"
+            />
+            <div className="modal-content">
+              <h2 className="modal-title">
+                {selectedUser.name.first} {selectedUser.name.last}
+              </h2>
+              <p>Idade: {selectedUser.dob.age}</p>
+              <p>Sexo: {selectedUser.gender}</p>
+              <p>Cidade: {selectedUser.location.city}</p>
+              <button onClick={closeModal}>Fechar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
